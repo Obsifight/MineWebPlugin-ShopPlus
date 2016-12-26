@@ -1,1 +1,23 @@
-{}
+{
+  "SHOPPLUS__ADD_CREDIT_TITLE": "Ajouter des {MONEY_NAME}",
+  "SHOPPLUS__STEP_TITLE": "Étape {NB}",
+  "SHOPPLUS__STEP_1_TITLE": "Choississez le moyen de paiement",
+  "SHOPPLUS__STEP_2_TITLE": "Choississez le montant",
+  "SHOPPLUS__STEP_3_TITLE": "Payez et recevez vos {MONEY_NAME}",
+  "SHOPPLUS__PAYMENT_METHOD_PAYPAL": "PayPal",
+  "SHOPPLUS__PAYMENT_METHOD_DEDIPASS": "Dédipass (Mobile)",
+  "SHOPPLUS__PAYMENT_METHOD_PAYSAFECARD": "paysafecard",
+  "SHOPPLUS__PAYMENT_METHOD_HIPAY_WALLET": "Carte bancaire",
+  "SHOPPLUS__PAYPAL_INFO": "Vous serez redirigé vers les PayPal, une fois le paiement effectué vous serez crédité automatiquement instantanément ou après quelques minutes.",
+  "SHOPPLUS__BTN_PAY": "Payer {AMOUNT}€",
+  "SHOPPLUS__BTN_PAY_EMPTY": "Payer",
+
+  "SHOPPLUS__PAYPAL_TERM_1": "Je suis majeur dans mon pays de résidence et je respecte entièrement les conditions d'utilisation des services PayPal",
+  "SHOPPLUS__PAYPAL_TERM_2": "J'achète un bien virtuel qui ne nécessite aucune livraison et n'a aucune enveloppe physique",
+  "SHOPPLUS__PAYPAL_TERM_3": "Par dérogation à l'article L.121-20-2 du Code Français de la Consommation, je refuse à mon droit de rétractation à compter de la date et heure de réception de mes {MONEY_NAME} sur {WEBSITE_NAME}",
+  "SHOPPLUS__PAYPAL_TERMS_TITLE": "Accords pour les paiements Paypal",
+  "SHOPPLUS__PAYPAL_TERMS_SUBTITLE": "En continuant, je reconnais que :",
+  "SHOPPLUS__PAYPAL_TERMS_INFO": "Note aux mineurs : En continuant et en ne respectant les les conditions ci-dessus, si vous veniez par exemple à essayer d'annuler votre paiement, vos responsables légaux devraient alors assumer la responsabilité de vos actes",
+
+  "SHOPPLUS__PAYSAFECARD_INFO": "Vous allez payer {AMOUNT}€ sur paysafecard. Une fois le paiement effectué, vous serez automatiquement redirigé sur notre site et crédité de {CREDITS} {MONEY_NAME}."
+}
