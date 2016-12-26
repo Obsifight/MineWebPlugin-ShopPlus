@@ -8,6 +8,7 @@
   "SHOPPLUS__PAYMENT_METHOD_DEDIPASS": "Dédipass (Mobile)",
   "SHOPPLUS__PAYMENT_METHOD_PAYSAFECARD": "paysafecard",
   "SHOPPLUS__PAYMENT_METHOD_HIPAY_WALLET": "Carte bancaire",
+  "SHOPPLUS__HIPAY_INFO": "Vous serez redirigé vers HipayWallet, une fois le paiement effectué vous serez crédité automatiquement instantanément.",
   "SHOPPLUS__PAYPAL_INFO": "Vous serez redirigé vers les PayPal, une fois le paiement effectué vous serez crédité automatiquement instantanément ou après quelques minutes.",
   "SHOPPLUS__BTN_PAY": "Payer {AMOUNT}€",
   "SHOPPLUS__BTN_PAY_EMPTY": "Payer",
@@ -19,5 +20,10 @@
   "SHOPPLUS__PAYPAL_TERMS_SUBTITLE": "En continuant, je reconnais que :",
   "SHOPPLUS__PAYPAL_TERMS_INFO": "Note aux mineurs : En continuant et en ne respectant les les conditions ci-dessus, si vous veniez par exemple à essayer d'annuler votre paiement, vos responsables légaux devraient alors assumer la responsabilité de vos actes",
 
-  "SHOPPLUS__PAYSAFECARD_INFO": "Vous allez payer {AMOUNT}€ sur paysafecard. Une fois le paiement effectué, vous serez automatiquement redirigé sur notre site et crédité de {CREDITS} {MONEY_NAME}."
+  "SHOPPLUS_HIPAY_INFO_BEFORE_BUY": "Vous allez payer {AMOUNT}€ sur HipayWallet avec votre carte bancaire. Une fois le paiement effectué, vous serez automatiquement redirigé sur notre site et crédité de {CREDITS} {MONEY_NAME}.",
+  "SHOPPLUS__PAYSAFECARD_INFO": "Vous allez payer {AMOUNT}€ sur paysafecard. Une fois le paiement effectué, vous serez automatiquement redirigé sur notre site et crédité de {CREDITS} {MONEY_NAME}.",
+
+  "SHOPPLUS_HIPAY_SUCCESS_MSG": "Nous avons bien reçu votre paiement effectué sur la plateforme HipayWallet ! Vous allez être crédité sous peu, merci de votre confiance et bon jeu sur {WEBSITE_NAME} !",
+  "SHOPPLUS_HIPAY_ERROR_MSG": "Malheureusement, une erreur est survenue pendant le traitement de votre demande ! Nous en sommes désolé, veuillez rééssayer, si le problème persiste n'hésitez pas à nous contacter.",
+  "SHOPPLUS_HIPAY_CANCEL_MSG": "Vous avez bien annulé la demande de paiement ! N'hésitez pas à nous contacter si vous rencontrez un problème."
 }
