@@ -30,7 +30,7 @@ class PaymentController extends ShopPlusAppController {
         . "<items>"
             . "<item id='1'>"
                 . "<name>".$offer['credits']." ".$this->Configuration->getMoneyName()."</name>"
-                . "<infos>Achat de ".$offer['credits']." ".$this->Configuration->getMoneyName()." sur BloodSymphony</infos>"
+                . "<infos>Achat de ".$offer['credits']." ".$this->Configuration->getMoneyName()." sur ".$this->Configuration->getKey('name')."</infos>"
                 . "<amount>".$offer['amount']."</amount>"
                 . "<categoryId>251</categoryId>"
                 . "<quantity>1</quantity>"

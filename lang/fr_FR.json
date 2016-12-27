@@ -25,5 +25,7 @@
 
   "SHOPPLUS_HIPAY_SUCCESS_MSG": "Nous avons bien reçu votre paiement effectué sur la plateforme HipayWallet ! Vous allez être crédité sous peu, merci de votre confiance et bon jeu sur {WEBSITE_NAME} !",
   "SHOPPLUS_HIPAY_ERROR_MSG": "Malheureusement, une erreur est survenue pendant le traitement de votre demande ! Nous en sommes désolé, veuillez rééssayer, si le problème persiste n'hésitez pas à nous contacter.",
-  "SHOPPLUS_HIPAY_CANCEL_MSG": "Vous avez bien annulé la demande de paiement ! N'hésitez pas à nous contacter si vous rencontrez un problème."
+  "SHOPPLUS_HIPAY_CANCEL_MSG": "Vous avez bien annulé la demande de paiement ! N'hésitez pas à nous contacter si vous rencontrez un problème.",
+
+  "NOTIFICATION__HIPAY_CREDITED": "Vous avez été crédité de {CREDITS} {MONEY_NAME} grâce à votre paiement de {AMOUNT}€ par carte bancaire !"
 }
