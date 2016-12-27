@@ -1,49 +1,6 @@
 <?php
 class PaymentController extends ShopPlusAppController {
 
-  private function __generateHipayForm($offer) {
-    $xml = "<?xml version='1.0' encoding='utf-8' ?>"
-      . "<order>"
-        . "<userAccountId>{$offer['user_account_id']}</userAccountId>"
-        . "<currency>EUR</currency>"
-        . "<label>".$offer['credits']." ".$this->Configuration->getMoneyName()."</label>"
-        . "<ageGroup>ALL</ageGroup>"
-        . "<categoryId>251</categoryId>"
-        . "<urlAcquital><![CDATA[".Router::url(array('controller' => 'hipay', 'action' => 'ipn'), true)."]]></urlAcquital>"
-        . "<urlOk><![CDATA[".Router::url(array('controller' => 'hipay', 'action' => 'success'), true)."]]></urlOk>"
-        . "<urlKo><![CDATA[".Router::url(array('controller' => 'hipay', 'action' => 'error'), true)."]]></urlKo>"
-        . "<urlCancel><![CDATA[".Router::url(array('controller' => 'hipay', 'action' => 'cancel'), true)."]]></urlCancel>"
-        . "<urlInstall><![CDATA[".Router::url(array('controller' => 'payment', 'action' => 'addCredit'), true)."]]></urlInstall>"
-        //. "<urlLogo><![CDATA[".Router::url('', true)."]]></urlLogo>"
-        . "<!-- optional -->"
-        //. "<thirdPartySecurity>compatible</thirdPartySecurity>"
-        . "<locale>fr_FR</locale>"
-        //. "<issuerAccountLogin>".$offer['data']->issue_email."</issuerAccountLogin>"
-        . "<data>"
-            . "<user>"
-              . "<id>{$this->User->getKey('id')}</id>"
-            . "</user>"
-            . "<offer>"
-              . "<id>{$offer['id']}</id>"
-            . "</offer>"
-        . "</data>"
-        . "<items>"
-            . "<item id='1'>"
-                . "<name>".$offer['credits']." ".$this->Configuration->getMoneyName()."</name>"
-                . "<infos>Achat de ".$offer['credits']." ".$this->Configuration->getMoneyName()." sur ".$this->Configuration->getKey('name')."</infos>"
-                . "<amount>".$offer['amount']."</amount>"
-                . "<categoryId>251</categoryId>"
-                . "<quantity>1</quantity>"
-                . "<reference>REF1</reference>"
-            . "</item>"
-        . "</items>"
-      . "</order>";
-    $signKey = $offer['sign_key'];
-    $encodedData = base64_encode($xml);
-    $md5Sign = md5($encodedData.$signKey);
-    return array($encodedData, $md5Sign);
-  }
-
   public function addCredit() {
     if (!$this->isConnected)
       throw new ForbiddenException();
@@ -76,17 +33,20 @@ class PaymentController extends ShopPlusAppController {
       $this->set('paysafecardCurrency', $currency);
     }
 
-    $this->loadModel('ShopPlus.HipayOffer');
-    $hipayOffers = $this->HipayOffer->find('all');
-    foreach ($hipayOffers as $key => $offer) {
-      list($hipayOffers[$key]['data'], $hipayOffers[$key]['sign']) = $this->__generateHipayForm($offer['HipayOffer']);
+    $this->loadModel('ShopPlus.StripeConfiguration');
+    $stripeConfig = $this->StripeConfiguration->find('first');
+    if (!empty($stripeConfig) && $stripeConfig['StripeConfiguration']['status']) {
+      $this->set('stripe', true);
+      $this->set('stripeCreditFor1', $stripeConfig['StripeConfiguration']['credits_for_1']);
+      $this->set('stripePublishableKey', $stripeConfig['StripeConfiguration']['publishable_key']);
+    } else {
+      $this->set('stripe', false);
     }
 
     $this->set(compact(
       'paypalOffers',
       'starpassOffers',
-      'dedipassStatus',
-      'hipayOffers'
+      'dedipassStatus'
     ));
   }
 

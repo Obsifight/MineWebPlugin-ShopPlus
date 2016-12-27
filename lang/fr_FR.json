@@ -7,10 +7,10 @@
   "SHOPPLUS__PAYMENT_METHOD_PAYPAL": "PayPal",
   "SHOPPLUS__PAYMENT_METHOD_DEDIPASS": "Dédipass (Mobile)",
   "SHOPPLUS__PAYMENT_METHOD_PAYSAFECARD": "paysafecard",
-  "SHOPPLUS__PAYMENT_METHOD_HIPAY_WALLET": "Carte bancaire",
-  "SHOPPLUS__HIPAY_INFO": "Vous serez redirigé vers HipayWallet, une fois le paiement effectué vous serez crédité automatiquement instantanément.",
+  "SHOPPLUS__PAYMENT_METHOD_STRIPE": "Carte bancaire",
   "SHOPPLUS__PAYPAL_INFO": "Vous serez redirigé vers les PayPal, une fois le paiement effectué vous serez crédité automatiquement instantanément ou après quelques minutes.",
   "SHOPPLUS__BTN_PAY": "Payer {AMOUNT}€",
+  "SHOPPLUS__BTN_PAY_LOADING": "<i class=\"fa fa-refresh fa-spin\"></i> Paiement ...",
   "SHOPPLUS__BTN_PAY_EMPTY": "Payer",
 
   "SHOPPLUS__PAYPAL_TERM_1": "Je suis majeur dans mon pays de résidence et je respecte entièrement les conditions d'utilisation des services PayPal",
@@ -20,12 +20,28 @@
   "SHOPPLUS__PAYPAL_TERMS_SUBTITLE": "En continuant, je reconnais que :",
   "SHOPPLUS__PAYPAL_TERMS_INFO": "Note aux mineurs : En continuant et en ne respectant les les conditions ci-dessus, si vous veniez par exemple à essayer d'annuler votre paiement, vos responsables légaux devraient alors assumer la responsabilité de vos actes",
 
-  "SHOPPLUS_HIPAY_INFO_BEFORE_BUY": "Vous allez payer {AMOUNT}€ sur HipayWallet avec votre carte bancaire. Une fois le paiement effectué, vous serez automatiquement redirigé sur notre site et crédité de {CREDITS} {MONEY_NAME}.",
+  "SHOPPLUS_STRIPE_INFO_BEFORE_BUY": "Vous allez payer {AMOUNT}€ sur notre site par l'intermédiaire de Stripe avec votre carte bancaire. Une fois le paiement effectué, vous serez automatiquement crédité de {CREDITS} {MONEY_NAME}.",
+  "SHOPPLUS_STRIPE_INFO_SECURITY_BEFORE_BUY": "Vous êtes sur une page sécurisée.",
+  "SHOPPLUS_STRIPE_INFO_BEFORE_BUY_STORE": " Vos informations bancaires ne sont pas enregistrées, les transactions sont gérés par Stripe.",
+  "SHOPPLUS_STRIPE_INFO_SECURITY_PLUS_BEFORE_BUY": "La connexion est sécurisée grâce au protocole TLS (HTTPS/SSL).",
   "SHOPPLUS__PAYSAFECARD_INFO": "Vous allez payer {AMOUNT}€ sur paysafecard. Une fois le paiement effectué, vous serez automatiquement redirigé sur notre site et crédité de {CREDITS} {MONEY_NAME}.",
 
-  "SHOPPLUS_HIPAY_SUCCESS_MSG": "Nous avons bien reçu votre paiement effectué sur la plateforme HipayWallet ! Vous allez être crédité sous peu, merci de votre confiance et bon jeu sur {WEBSITE_NAME} !",
-  "SHOPPLUS_HIPAY_ERROR_MSG": "Malheureusement, une erreur est survenue pendant le traitement de votre demande ! Nous en sommes désolé, veuillez rééssayer, si le problème persiste n'hésitez pas à nous contacter.",
-  "SHOPPLUS_HIPAY_CANCEL_MSG": "Vous avez bien annulé la demande de paiement ! N'hésitez pas à nous contacter si vous rencontrez un problème.",
+  "SHOPPLUS__STRIPE_FORM__AMOUNT": "Montant",
+  "SHOPPLUS__STRIPE_FORM__CREDITS": "{MONEY_NAME} crédités",
+  "SHOPPLUS__STRIPE_FORM_NUMBER": "Numéro de carte",
+  "SHOPPLUS__STRIPE_FORM_NAME": "Nom",
+  "SHOPPLUS__STRIPE_FORM_EXPIRY": "Date d'expiration",
+  "SHOPPLUS__STRIPE_FORM_CVC": "CVV",
+  "SHOPPLUS__STRIPE_SUCCESS": "Vous avez été crédité de {CREDITS} {MONEY_NAME} grâce à votre paiement de {AMOUNT}€ par carte bancaire !",
+  "SHOPPLUS__STRIPE_ALREADY_STORED": "Le paiement a déjà été enregistré dans notre base de données.",
 
-  "NOTIFICATION__HIPAY_CREDITED": "Vous avez été crédité de {CREDITS} {MONEY_NAME} grâce à votre paiement de {AMOUNT}€ par carte bancaire !"
+  "SHOPPLUS__STRIPE_ADMIN": "Stripe",
+  "SHOPPLUS__STRIPE_ADMIN_CONFIG_DEFAULT_CREDITS_GIVED_FOR_1_AS_AMOUNT": "Points crédités pour un montant de 1.",
+  "SHOPPLUS__STRIPE_ADMIN_CONFIG_SECRET_KEY": "Clé secrète (Secret Key)",
+  "SHOPPLUS__STRIPE_ADMIN_CONFIG_PUBLISHABLE_KEY": "Clé publique (Publishable Key)",
+  "SHOPPLUS__STRIPE_HISTORIES": "Historique des transactions Stripe",
+  "SHOPPLUS__STRIPE_ADMIN_CONFIG_SAVED": "La configuration a bien été enregistrée",
+  "SHOPPLUS__STRIPE_HISTORIES_ID": "ID",
+  "SHOPPLUS__STRIPE_HISTORIES_AMOUNT": "Montant",
+  "SHOPPLUS__STRIPE_HISTORIES_TOKEN": "Token"
 }
