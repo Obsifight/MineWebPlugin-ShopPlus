@@ -59,6 +59,6 @@
   "SHOPPLUS__ITEMS_PURCHASES": "Top des articles (achats)",
   "SHOPPLUS__MONTHLY_PURCHASES_AVERAGE": "Ajout de crédits<br><small><em>Sur les 6 derniers mois</em></small>",
   "SHOPPLUS__MONTH": "mois",
-  "SHOPPLUS__MONTHLY_PURCHASES_AVERAGE": "Modes de paiements <br><small><em>Sur les 6 derniers mois</em></small>",
+  "SHOPPLUS__MONTHLY_MODE_PURCHASES": "Modes de paiements <br><small><em>Sur les 6 derniers mois</em></small>",
   "SHOPPLUS__ITEMS_PURCHASES_BY_ITEM_BY_MONTH_BY_SERVERS": "Achats d'articles par serveurs"
 }

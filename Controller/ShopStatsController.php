@@ -1,5 +1,5 @@
 <?php
-class StatsController extends ShopPlusAppController {
+class ShopStatsController extends ShopPlusAppController {
 
   public function beforeFilter() {
     parent::beforeFilter();
@@ -16,11 +16,13 @@ class StatsController extends ShopPlusAppController {
     $this->loadModel('ShopPlus.StripeHistory');
     $this->loadModel('Paysafecard.PaymentHistory');
     $this->loadModel('Shop.ItemsBuyHistory');
+    $this->loadModel('Shop.Item');
+    $db = $this->DedipassHistory->getDataSource();
 
     $this->set('typesName', array(
       'PAYSAFECARD' => 'Paysafecard',
       'STRIPE' => 'Carte de crédit',
-      'PHONE' => 'Dédipass',
+      'DEDIPASS' => 'Dédipass',
       'PAYPAL' => 'PayPal'
     ));
 
@@ -52,15 +54,22 @@ class StatsController extends ShopPlusAppController {
     // *******
     /* --- dailyIncomesAverage --- */
       $dailyIncomesAverage = 0; // in €
-      $query = $this->CreditsHistory->find('all', array( // get total by day
-        'fields' => 'SUM(Offer.amount)',
-        'recursive' => 1,
-        'group' => 'DAY(`CreditsHistory`.`history_date`), MONTH(`CreditsHistory`.`history_date`), YEAR(`CreditsHistory`.`history_date`)',
-        'conditions' => "CreditsHistory.history_date < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' )" // not this month
-      ));
+      $query = $db->fetchAll(
+        "SELECT SUM(`total`) AS `total`, DAY(`created`) AS `day`, MONTH(`created`) AS `month` FROM "
+        . "("
+        . " SELECT SUM(`shopplus-payout`) AS `total`, `created` FROM  `shop__dedipass_histories` WHERE `shop__dedipass_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' ) GROUP BY DAY(`shop__dedipass_histories`.`created`), MONTH(`shop__dedipass_histories`.`created`), YEAR(`shop__dedipass_histories`.`created`)"
+        . " UNION"
+        . " SELECT SUM(`payment_amount`) AS `total`, `created` FROM `shop__paypal_histories` WHERE `shop__paypal_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' ) GROUP BY DAY(`shop__paypal_histories`.`created`), MONTH(`shop__paypal_histories`.`created`), YEAR(`shop__paypal_histories`.`created`)"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total`, `created` FROM `paysafecard__payment_histories` WHERE `paysafecard__payment_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' ) GROUP BY DAY(`paysafecard__payment_histories`.`created`), MONTH(`paysafecard__payment_histories`.`created`), YEAR(`paysafecard__payment_histories`.`created`)"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total`, `created` FROM `shopplus__stripe_histories` WHERE `shopplus__stripe_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' ) GROUP BY DAY(`shopplus__stripe_histories`.`created`), MONTH(`shopplus__stripe_histories`.`created`), YEAR(`shopplus__stripe_histories`.`created`)"
+        . ") t"
+        . " GROUP BY DAY(`created`), MONTH(`created`), YEAR(`created`)"
+      );
       $datas = array();
       foreach ($query as $data) { // group into array values
-        $datas[] = $data[0]['SUM(`Offer`.`amount`)'];
+        $datas[] = $data[0]['total'];
       }
       $dailyIncomesAverage = round(array_sum($datas) / count($datas)); // make average
       unset($query);
@@ -69,12 +78,19 @@ class StatsController extends ShopPlusAppController {
       $this->set(compact('dailyIncomesAverage'));
     /* --- incomesThisWeekPercentage --- */
       $incomesThisWeekPercentage = 0; // percentage
-      $query = $this->CreditsHistory->find('first', array( // get total by day
-        'fields' => 'SUM(Offer.amount)',
-        'recursive' => 1,
-        'conditions' => 'YEAR(CreditsHistory.history_date) = YEAR(NOW()) AND WEEK(CreditsHistory.history_date) = WEEK(NOW())'
-      ));
-      $incomesThisWeekPercentage = ($query[0]['SUM(`Offer`.`amount`)'] - $dailyIncomesAverage) / $dailyIncomesAverage * 100;
+      $query = $db->fetchAll(
+        "SELECT SUM(`total`) AS `total` FROM "
+        . "("
+        . " SELECT SUM(`shopplus-payout`) AS `total` FROM  `shop__dedipass_histories` WHERE YEAR(`shop__dedipass_histories`.`created`) = YEAR(NOW()) AND WEEK(`shop__dedipass_histories`.`created`) = WEEK(NOW())"
+        . " UNION"
+        . " SELECT SUM(`payment_amount`) AS `total` FROM `shop__paypal_histories` WHERE YEAR(`shop__paypal_histories`.`created`) = YEAR(NOW()) AND WEEK(`shop__paypal_histories`.`created`) = WEEK(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `paysafecard__payment_histories` WHERE YEAR(`paysafecard__payment_histories`.`created`) = YEAR(NOW()) AND WEEK(`paysafecard__payment_histories`.`created`) = WEEK(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `shopplus__stripe_histories` WHERE YEAR(`shopplus__stripe_histories`.`created`) = YEAR(NOW()) AND WEEK(`shopplus__stripe_histories`.`created`) = WEEK(NOW())"
+        . ") t"
+      );
+      $incomesThisWeekPercentage = ($query[0][0]['total'] - $dailyIncomesAverage) / $dailyIncomesAverage * 100;
       $incomesThisWeekPercentage = round($incomesThisWeekPercentage);
       if ($incomesThisWeekPercentage == -0)
         $incomesThisWeekPercentage = 0;
@@ -82,15 +98,22 @@ class StatsController extends ShopPlusAppController {
       $this->set(compact('incomesThisWeekPercentage'));
     /* --- monthlyIncomesAverage --- */
       $monthlyIncomesAverage = 0; // in €
-      $query = $this->CreditsHistory->find('all', array( // get total by day
-        'fields' => 'SUM(Offer.amount)',
-        'recursive' => 1,
-        'group' => 'MONTH(`CreditsHistory`.`history_date`), YEAR(`CreditsHistory`.`history_date`)',
-        'conditions' => "CreditsHistory.history_date < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' )" // not this month
-      ));
+      $query = $db->fetchAll(
+        "SELECT SUM(`total`) AS `total`, MONTH(`created`) AS `month` FROM "
+        . "("
+        . " SELECT SUM(`shopplus-payout`) AS `total`, `created` FROM  `shop__dedipass_histories` WHERE `shop__dedipass_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' ) GROUP BY MONTH(`shop__dedipass_histories`.`created`), YEAR(`shop__dedipass_histories`.`created`)"
+        . " UNION"
+        . " SELECT SUM(`payment_amount`) AS `total`, `created` FROM `shop__paypal_histories` WHERE `shop__paypal_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' ) GROUP BY MONTH(`shop__paypal_histories`.`created`), YEAR(`shop__paypal_histories`.`created`)"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total`, `created` FROM `paysafecard__payment_histories` WHERE `paysafecard__payment_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' ) GROUP BY MONTH(`paysafecard__payment_histories`.`created`), YEAR(`paysafecard__payment_histories`.`created`)"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total`, `created` FROM `shopplus__stripe_histories` WHERE `shopplus__stripe_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' ) GROUP BY MONTH(`shopplus__stripe_histories`.`created`), YEAR(`shopplus__stripe_histories`.`created`)"
+        . ") t"
+        . " GROUP BY MONTH(`created`), YEAR(`created`)"
+      );
       $datas = array();
       foreach ($query as $data) { // group into array values
-        $datas[] = $data[0]['SUM(`Offer`.`amount`)'];
+        $datas[] = $data[0]['total'];
       }
       $monthlyIncomesAverage = round(array_sum($datas) / count($datas)); // make average
       unset($query);
@@ -100,121 +123,84 @@ class StatsController extends ShopPlusAppController {
     /* --- incomesThisMonthPercentage && incomesThisMonth --- */
       $incomesThisMonth = 0; // in €
       $incomesThisMonthPercentage = 0; // this month
-      $query = $this->CreditsHistory->find('first', array( // get total by day
-        'fields' => 'SUM(Offer.amount)',
-        'recursive' => 1,
-        'conditions' => 'YEAR(CreditsHistory.history_date) = YEAR(NOW()) AND MONTH(CreditsHistory.history_date) = MONTH(NOW())'
-      ));
-      $incomesThisMonth = $query[0]['SUM(`Offer`.`amount`)'];
-      $incomesThisMonthPercentage = ($query[0]['SUM(`Offer`.`amount`)'] - $monthlyIncomesAverage) / $monthlyIncomesAverage * 100;
+      $query = $db->fetchAll(
+        "SELECT SUM(`total`) AS `total` FROM "
+        . "("
+        . " SELECT SUM(`shopplus-payout`) AS `total` FROM  `shop__dedipass_histories` WHERE YEAR(`shop__dedipass_histories`.`created`) = YEAR(NOW()) AND MONTH(`shop__dedipass_histories`.`created`) = MONTH(NOW())"
+        . " UNION"
+        . " SELECT SUM(`payment_amount`) AS `total` FROM `shop__paypal_histories` WHERE YEAR(`shop__paypal_histories`.`created`) = YEAR(NOW()) AND MONTH(`shop__paypal_histories`.`created`) = MONTH(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `paysafecard__payment_histories` WHERE YEAR(`paysafecard__payment_histories`.`created`) = YEAR(NOW()) AND MONTH(`paysafecard__payment_histories`.`created`) = MONTH(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `shopplus__stripe_histories` WHERE YEAR(`shopplus__stripe_histories`.`created`) = YEAR(NOW()) AND MONTH(`shopplus__stripe_histories`.`created`) = MONTH(NOW())"
+        . ") t"
+      );
+      $incomesThisMonth = $query[0][0]['total'];
+      $incomesThisMonthPercentage = ($incomesThisMonth - $monthlyIncomesAverage) / $monthlyIncomesAverage * 100;
       $incomesThisMonthPercentage = round($incomesThisMonthPercentage);
       if ($incomesThisMonthPercentage == -0)
         $incomesThisMonthPercentage = 0;
       unset($query);
       $this->set(compact('incomesThisMonthPercentage'));
       $this->set(compact('incomesThisMonth'));
-    /* --- incomesToday --- */
+    /* --- incomesToday --- */ // TODO
       $incomesToday = 0; // in €
-      $query = $this->CreditsHistory->find('first', array( // get total by day
-        'fields' => 'SUM(Offer.amount)',
-        'recursive' => 1,
-        'conditions' => 'YEAR(CreditsHistory.history_date) = YEAR(NOW()) AND MONTH(CreditsHistory.history_date) = MONTH(NOW()) AND DAY(CreditsHistory.history_date) = DAY(NOW())'
-      ));
-      $incomesToday = $query[0]['SUM(`Offer`.`amount`)'];
+      $query = $db->fetchAll(
+        "SELECT SUM(`total`) AS `total` FROM "
+        . "("
+        . " SELECT SUM(`shopplus-payout`) AS `total` FROM  `shop__dedipass_histories` WHERE YEAR(`shop__dedipass_histories`.`created`) = YEAR(NOW()) AND MONTH(`shop__dedipass_histories`.`created`) = MONTH(NOW()) AND DAY(`shop__dedipass_histories`.`created`) = DAY(NOW())"
+        . " UNION"
+        . " SELECT SUM(`payment_amount`) AS `total` FROM `shop__paypal_histories` WHERE YEAR(`shop__paypal_histories`.`created`) = YEAR(NOW()) AND MONTH(`shop__paypal_histories`.`created`) = MONTH(NOW()) AND DAY(`shop__paypal_histories`.`created`) = DAY(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `paysafecard__payment_histories` WHERE YEAR(`paysafecard__payment_histories`.`created`) = YEAR(NOW()) AND MONTH(`paysafecard__payment_histories`.`created`) = MONTH(NOW()) AND DAY(`paysafecard__payment_histories`.`created`) = DAY(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `shopplus__stripe_histories` WHERE YEAR(`shopplus__stripe_histories`.`created`) = YEAR(NOW()) AND MONTH(`shopplus__stripe_histories`.`created`) = MONTH(NOW()) AND DAY(`shopplus__stripe_histories`.`created`) = DAY(NOW())"
+        . ") t"
+      );
+      $incomesToday = $query[0][0]['total'];
       unset($query);
       $this->set(compact('incomesToday'));
     /* --- creditsPurchasesByMonthByModes --- */
-      $creditsPurchasesByMonthByModes = array(
-        'CREDIT_CARD' => array(
-          intval(date('m', strtotime('-6 month'))) => 0,
-          intval(date('m', strtotime('-5 month'))) => 0,
-          intval(date('m', strtotime('-4 month'))) => 0,
-          intval(date('m', strtotime('-3 month'))) => 0,
-          intval(date('m', strtotime('-2 month'))) => 0,
-          intval(date('m', strtotime('-1 month'))) => 0,
-          intval(date('m')) => 0
-        ),
-        'PHONE' => array(
-          intval(date('m', strtotime('-6 month'))) => 0,
-          intval(date('m', strtotime('-5 month'))) => 0,
-          intval(date('m', strtotime('-4 month'))) => 0,
-          intval(date('m', strtotime('-3 month'))) => 0,
-          intval(date('m', strtotime('-2 month'))) => 0,
-          intval(date('m', strtotime('-1 month'))) => 0,
-          intval(date('m')) => 0
-        ),
-        'PAYPAL' => array(
-          intval(date('m', strtotime('-6 month'))) => 0,
-          intval(date('m', strtotime('-5 month'))) => 0,
-          intval(date('m', strtotime('-4 month'))) => 0,
-          intval(date('m', strtotime('-3 month'))) => 0,
-          intval(date('m', strtotime('-2 month'))) => 0,
-          intval(date('m', strtotime('-1 month'))) => 0,
-          intval(date('m')) => 0
-        ),
-        'PAYSAFECARD' => array(
-          intval(date('m', strtotime('-6 month'))) => 0,
-          intval(date('m', strtotime('-5 month'))) => 0,
-          intval(date('m', strtotime('-4 month'))) => 0,
-          intval(date('m', strtotime('-3 month'))) => 0,
-          intval(date('m', strtotime('-2 month'))) => 0,
-          intval(date('m', strtotime('-1 month'))) => 0,
-          intval(date('m')) => 0
-        )
-      ); // last 6 months
-      $query = $this->CreditsHistory->find('all', array( // get total by day
-        'fields' => array(
-          'Offer.amount', 'Offer.type', 'MONTH(`CreditsHistory`.`history_date`) AS `month`'
-        ),
-        'recursive' => 1,
-        'conditions' => "CreditsHistory.history_date > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y/%m/01' )"
-      ));
-      // format data
-      $formattedDatas = array();
-      foreach ($query as $data) {
-        $formattedDatas[] = array(
-          'amount' => $data['Offer']['amount'],
-          'type' => $data['Offer']['type'],
-          'month' => $data[0]['month']
+      $creditsPurchasesByMonthByModes = array();
+      $modes = array(
+        'PAYSAFECARD' => array('table' => 'paysafecard__payment_histories', 'amount_column' => 'amount'),
+        'PAYPAL' => array('table' => 'shop__paypal_histories', 'amount_column' => 'payment_amount'),
+        'DEDIPASS' => array('table' => 'shop__dedipass_histories', 'amount_column' => 'shopplus-payout'),
+        'STRIPE' => array('table' => 'shopplus__stripe_histories', 'amount_column' => 'amount')
+      );
+      foreach ($modes as $key => $values) {
+        $query = $db->fetchAll(
+          "SELECT SUM(`{$values['amount_column']}`) AS `amount`, MONTH(`created`) AS `month`"
+          . " FROM `{$values['table']}`"
+          . " WHERE `created` > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y/%m/01' )"
+          . " GROUP BY MONTH(`created`)"
         );
-      }
-      // group by modes
-      $datasByModes = array();
-      foreach ($formattedDatas as $data) {
-        $datasByModes[$data['type']][] = array(
-          'month' => $data['month'],
-          'amount' => $data['amount']
-        );
-      }
-      // group by month
-      $datasByModesByMonth = array();
-      foreach ($datasByModes as $type => $datas) {
-        foreach ($datas as $data) {
-          if (isset($datasByModesByMonth[$type][$data['month']]))
-            $datasByModesByMonth[$type][$data['month']] += floatval($data['amount']);
-          else
-            $datasByModesByMonth[$type][$data['month']] = floatval($data['amount']);
+        foreach ($query as $row) {
+          // sample
+          $creditsPurchasesByMonthByModes[$key] = array(
+            intval(date('m', strtotime('-6 month'))) => 0,
+            intval(date('m', strtotime('-5 month'))) => 0,
+            intval(date('m', strtotime('-4 month'))) => 0,
+            intval(date('m', strtotime('-3 month'))) => 0,
+            intval(date('m', strtotime('-2 month'))) => 0,
+            intval(date('m', strtotime('-1 month'))) => 0,
+            intval(date('m')) => 0
+          );
+          // edit
+          $creditsPurchasesByMonthByModes[$key][$row[0]['month']] = $row[0]['amount'];
         }
       }
-      // merge
-      foreach ($creditsPurchasesByMonthByModes as $type => $datas) {
-        foreach ($datas as $month => $data) {
-          if (isset($datasByModesByMonth[$type][$month]))
-            $creditsPurchasesByMonthByModes[$type][$month] = $datasByModesByMonth[$type][$month];
-        }
-      }
+      unset($row);
+      unset($key);
+      unset($values);
       unset($query);
-      unset($data);
-      unset($formattedDatas);
-      unset($datasByModesByMonth);
-      unset($datasByModes);
       $this->set(compact('creditsPurchasesByMonthByModes'));
     /* --- creditsPurchasesByModes --- */
       $creditsPurchasesByModes = array(
         'PAYSAFECARD' => array(),
-        'CREDIT_CARD' => array(),
+        'STRIPE' => array(),
         'PAYPAL' => array(),
-        'PHONE' => array()
+        'DEDIPASS' => array()
       ); // amount of purchases by mode (PayPal/Dédipass...) (on any servers)
       foreach ($creditsPurchasesByMonthByModes as $type => $datas) {
         // add all data from all 6 last months
@@ -233,25 +219,25 @@ class StatsController extends ShopPlusAppController {
     // *********
     // Purchases
     // *********
-    /* --- itemsPurchasesThisMonth --- */
+    /* --- itemsPurchasesThisMonth --- */ // TODO
       $itemsPurchasesThisMonth = 0; // count items
-      $itemsPurchasesThisMonth = $this->ItemsHistory->find('count', array(
-        'conditions' => 'MONTH(ItemsHistory.created) = MONTH(NOW()) AND YEAR(ItemsHistory.created) = YEAR(NOW())'
+      $itemsPurchasesThisMonth = $this->ItemsBuyHistory->find('count', array(
+        'conditions' => 'MONTH(ItemsBuyHistory.created) = MONTH(NOW()) AND YEAR(ItemsBuyHistory.created) = YEAR(NOW())'
       ));
       $this->set(compact('itemsPurchasesThisMonth'));
     /* --- itemsPurchasesToday --- */
       $itemsPurchasesToday = 0; // count items
-      $itemsPurchasesToday = $this->ItemsHistory->find('count', array(
-        'conditions' => 'DAY(ItemsHistory.created) = DAY(NOW()) AND MONTH(ItemsHistory.created) = MONTH(NOW()) AND YEAR(ItemsHistory.created) = YEAR(NOW())'
+      $itemsPurchasesToday = $this->ItemsBuyHistory->find('count', array(
+        'conditions' => 'DAY(ItemsBuyHistory.created) = DAY(NOW()) AND MONTH(ItemsBuyHistory.created) = MONTH(NOW()) AND YEAR(ItemsBuyHistory.created) = YEAR(NOW())'
       ));
       $this->set(compact('itemsPurchasesToday'));
     /* --- itemsPurchasesByMonthByServers --- */
       // find servers
-      $this->loadModel('OpenShop.RconServer');
-      $findServers = $this->RconServer->find('all');
+      $this->loadModel('Server');
+      $findServers = $this->Server->find('all');
       $servers = array();
       foreach ($findServers as $server) {
-        $servers[$server['RconServer']['id']] = $server['RconServer']['name'];
+        $servers[$server['Server']['id']] = $server['Server']['name'];
       }
       $this->set(compact('servers'));
       // format sample data
@@ -268,12 +254,12 @@ class StatsController extends ShopPlusAppController {
         );
       }
       // query data
-      $query = $this->ItemsHistory->find('all', array(
+      $query = $this->ItemsBuyHistory->find('all', array(
         'fields' => array(
-          'Item.servers', 'MONTH(`ItemsHistory`.`created`) AS `month`'
+          'Item.servers', 'MONTH(`ItemsBuyHistory`.`created`) AS `month`'
         ),
         'recursive' => 1,
-        'conditions' => "ItemsHistory.created > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y/%m/01' )"
+        'conditions' => "ItemsBuyHistory.created > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y/%m/01' )"
       ));
       // format data
       $formattedDatas = array();
@@ -304,10 +290,10 @@ class StatsController extends ShopPlusAppController {
       $this->set(compact('itemsPurchasesByMonthByServers'));
     /* --- monthlyItemsPurchasesAverage --- */
       $monthlyItemsPurchasesAverage = 0; // percentage
-      $query = $this->ItemsHistory->find('all', array( // get total by day
+      $query = $this->ItemsBuyHistory->find('all', array( // get total by day
         'fields' => 'COUNT(id)',
-        'group' => 'MONTH(`ItemsHistory`.`created`), YEAR(`ItemsHistory`.`created`)',
-        'conditions' => "ItemsHistory.created < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' )" // not this month
+        'group' => 'MONTH(`ItemsBuyHistory`.`created`), YEAR(`ItemsBuyHistory`.`created`)',
+        'conditions' => "ItemsBuyHistory.created < DATE_FORMAT( CURRENT_DATE, '%Y/%m/01' )" // not this month
       ));
       $datas = array();
       foreach ($query as $data) { // group into array values
@@ -339,14 +325,16 @@ class StatsController extends ShopPlusAppController {
       }
       unset($datas);
       $this->set(compact('itemsPurchasesByServers'));
-    /* --- itemsPurchases --- */
+    /* --- itemsPurchases --- */ // TODO
       $itemsPurchases = array(); // amount of purchases by items (on any servers)
-      $query = $this->ItemsHistory->find('all', array(
+      $query = $this->ItemsBuyHistory->find('all', array(
         'recursive' => 1,
         'fields' => array(
-          'Item.name', 'COUNT(ItemsHistory.id) AS count'
+          'Item.name', 'COUNT(ItemsBuyHistory.id) AS count'
         ),
-        'group' => 'item_id'
+        'group' => 'item_id',
+        'order' => 'COUNT(ItemsBuyHistory.id) DESC',
+        'limit' => '5'
       ));
       // format data
       foreach ($query as $key => $data) {
@@ -357,7 +345,6 @@ class StatsController extends ShopPlusAppController {
       $this->set(compact('itemsPurchases'));
     /* --- itemsPurchasesByItemByMonthByServers --- */
       // get all items name
-      $this->loadModel('OpenShop.Item');
       $items = $this->Item->find('all');
       $itemsNames = array();
       foreach ($items as $item) {
@@ -373,12 +360,12 @@ class StatsController extends ShopPlusAppController {
         );
       }
       // query
-      $query = $this->ItemsHistory->find('all', array( // get total by day
+      $query = $this->ItemsBuyHistory->find('all', array( // get total by day
         'fields' => array(
-          'Item.name', 'Item.servers', 'MONTH(`ItemsHistory`.`created`) AS `month`'
+          'Item.name', 'Item.servers', 'MONTH(`ItemsBuyHistory`.`created`) AS `month`'
         ),
         'recursive' => 1,
-        'conditions' => "ItemsHistory.created > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH), '%Y/%m/01' )"
+        'conditions' => "ItemsBuyHistory.created > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH), '%Y/%m/01' )"
       ));
       // format data
       $formattedDatas = array();
