@@ -21,6 +21,10 @@ class ShopPlusAppSchema extends CakeSchema {
     'tableParameters' => array('charset' => 'latin1', 'collate' => 'latin1_swedish_ci', 'engine' => 'InnoDB')
   );
 
+  /*public $shop__dedipass_histories = array(
+    'shopplus-payout' => array('type' => 'float', 'null' => false, 'default' => null, 'unsigned' => false)
+  );*/
+
   public $shopplus__stripe_histories = array(
     'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
     'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false),

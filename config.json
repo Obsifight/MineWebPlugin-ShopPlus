@@ -2,13 +2,18 @@
   "name":"Shop+",
   "slug":"ShopPlus",
   "nav":false,
-  "admin":false,
+  "admin":true,
+	"admin_group_menu":"customisation",
+  "admin_name":"Statistiques boutique",
+  "admin_icon":"line-chart",
+  "admin_permission": "VIEW_SHOP_STATS",
+  "admin_route": "/admin/shop/stats",
   "author":"Eywek",
   "version":"1.0.0",
   "apiID":-1,
   "useEvents": true,
   "permissions" : {
-    "available" : [],
+    "available" : ["VIEW_SHOP_STATS"],
     "default" : {
       "0" : [],
       "2" : []

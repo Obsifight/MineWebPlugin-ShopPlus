@@ -43,5 +43,22 @@
   "SHOPPLUS__STRIPE_ADMIN_CONFIG_SAVED": "La configuration a bien été enregistrée",
   "SHOPPLUS__STRIPE_HISTORIES_ID": "ID",
   "SHOPPLUS__STRIPE_HISTORIES_AMOUNT": "Montant",
-  "SHOPPLUS__STRIPE_HISTORIES_TOKEN": "Token"
+  "SHOPPLUS__STRIPE_HISTORIES_TOKEN": "Token",
+
+  "SHOPPLUS__ADMIN_STATS": "Statistiques",
+  "SHOPPLUS__DAILY_INCOMES_AVERAGE": "Revenus quotidiens",
+  "SHOPPLUS__THIS_WEEK": "cette semaine",
+  "SHOPPLUS__MONTHLY_INCOMES_AVERAGE": "Revenus mensuels",
+  "SHOPPLUS__THIS_MONTH": "ce mois",
+  "SHOPPLUS__INCOMES_THIS_MONTH": "Revenus ce mois-ci",
+  "SHOPPLUS__TODAY": "aujourd'hui",
+  "SHOPPLUS__ITEMS_PURCHASES_THIS_MONTH": "Achats ce mois-ci",
+  "SHOPPLUS__MONTHLY_ITEMS_PURCHASES_AVERAGE": "Achats<br><small><em>Sur les 6 derniers mois</em></small>",
+  "SHOPPLUS__PURCHASES_MONTH": "achats / mois",
+  "SHOPPLUS__ITEMS_PURCHASES_BY_SERVERS": "Top des serveurs (achats)<br><small><em>Sur les 6 derniers mois</em></small>",
+  "SHOPPLUS__ITEMS_PURCHASES": "Top des articles (achats)",
+  "SHOPPLUS__MONTHLY_PURCHASES_AVERAGE": "Ajout de crédits<br><small><em>Sur les 6 derniers mois</em></small>",
+  "SHOPPLUS__MONTH": "mois",
+  "SHOPPLUS__MONTHLY_PURCHASES_AVERAGE": "Modes de paiements <br><small><em>Sur les 6 derniers mois</em></small>",
+  "SHOPPLUS__ITEMS_PURCHASES_BY_ITEM_BY_MONTH_BY_SERVERS": "Achats d'articles par serveurs"
 }
