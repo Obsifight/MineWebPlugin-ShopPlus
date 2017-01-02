@@ -60,5 +60,9 @@
   "SHOPPLUS__MONTHLY_PURCHASES_AVERAGE": "Ajout de crédits<br><small><em>Sur les 6 derniers mois</em></small>",
   "SHOPPLUS__MONTH": "mois",
   "SHOPPLUS__MONTHLY_MODE_PURCHASES": "Modes de paiements <br><small><em>Sur les 6 derniers mois</em></small>",
-  "SHOPPLUS__ITEMS_PURCHASES_BY_ITEM_BY_MONTH_BY_SERVERS": "Achats d'articles par serveurs"
+  "SHOPPLUS__ITEMS_PURCHASES_BY_ITEM_BY_MONTH_BY_SERVERS": "Achats d'articles par serveurs",
+
+  "PERMISSIONS__VIEW_SHOP_STATS": "Voir les statistiques de la boutique",
+  "PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_STRIPE": "Pouvoir configurer Stripe",
+  "PERMISSIONS__SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY": "Pouvoir voir l'historique des transactions Stripe"
 }

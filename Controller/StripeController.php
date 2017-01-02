@@ -80,7 +80,7 @@ class StripeController extends ShopPlusAppController {
     $this->autoRender = false;
     $this->response->type('json');
 
-    if(!$this->isConnected || !$this->Permissions->can('SHOPPLUS__ADMIN_MANAGE_STRIPE'))
+    if(!$this->isConnected || !$this->Permissions->can('SHOPPLUS__ADMIN_CONFIG_STRIPE'))
       throw new ForbiddenException();
     if(!$this->request->is('ajax'))
       throw new NotFoundException();
@@ -102,7 +102,7 @@ class StripeController extends ShopPlusAppController {
   }
 
   public function admin_get_histories() {
-    if(!$this->isConnected || !$this->Permissions->can('SHOPPLUS__ADMIN_MANAGE_STRIPE'))
+    if(!$this->isConnected || !$this->Permissions->can('SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY'))
       throw new ForbiddenException();
 
     $this->autoRender = false;

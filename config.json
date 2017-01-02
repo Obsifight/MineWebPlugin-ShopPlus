@@ -13,7 +13,7 @@
   "apiID":-1,
   "useEvents": true,
   "permissions" : {
-    "available" : ["VIEW_SHOP_STATS"],
+    "available" : ["VIEW_SHOP_STATS", "SHOPPLUS__ADMIN_CONFIG_STRIPE", "SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY"],
     "default" : {
       "0" : [],
       "2" : []
