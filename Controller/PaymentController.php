@@ -1,5 +1,5 @@
 <?php
-class PaymentController extends ShopPlusAppController {
+class PaymentPageController extends ShopPlusAppController {
 
   public function addCredit() {
     if (!$this->isConnected)
