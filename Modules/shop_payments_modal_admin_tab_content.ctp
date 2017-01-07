@@ -4,7 +4,7 @@
 
   <br><br>
 
-  <?php if($Permissions->can('SHOPPLUS__ADMIN_CONFIG_STRIPE')): ?>
+  <?php if($permissions['SHOPPLUS__ADMIN_CONFIG_STRIPE']): ?>
     <form action="<?= $this->Html->url(array('controller' => 'stripe', 'action' => 'config', 'plugin' => 'ShopPlus', 'admin' => true)) ?>" data-ajax="true">
 
       <div class="form-group">
@@ -29,7 +29,7 @@
     </form>
   <?php endif; ?>
 
-  <?php if($Permissions->can('SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY')): ?>
+  <?php if($permissions['SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY']): ?>
     <hr>
 
     <h3><?= $Lang->get('SHOPPLUS__STRIPE_HISTORIES') ?></h3>

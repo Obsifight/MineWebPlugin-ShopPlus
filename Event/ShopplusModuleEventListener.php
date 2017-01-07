@@ -22,6 +22,11 @@ class ShopplusModuleEventListener implements CakeEventListener {
       $stripeConfig = $this->controller->StripeConfiguration->find('first');
       ModuleComponent::$vars['stripeConfig'] = $stripeConfig;
 
+      ModuleComponent::$vars['permissions'] = array(
+        'SHOPPLUS__ADMIN_CONFIG_STRIPE' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_CONFIG_STRIPE'),
+        'SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY')
+      );
+
     }
   }
 
