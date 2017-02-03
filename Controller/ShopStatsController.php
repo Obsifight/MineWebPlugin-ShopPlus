@@ -172,7 +172,7 @@ class ShopStatsController extends ShopPlusAppController {
         $query = $db->fetchAll(
           "SELECT SUM(`{$values['amount_column']}`) AS `amount`, MONTH(`created`) AS `month`"
           . " FROM `{$values['table']}`"
-          . " WHERE `created` > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y/%m/31' )"
+          . " WHERE `created` > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y-%m-01 00:00:00' )"
           . " GROUP BY MONTH(`created`)"
         );
         foreach ($query as $row) {
