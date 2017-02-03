@@ -169,6 +169,17 @@ class ShopStatsController extends ShopPlusAppController {
         'STRIPE' => array('table' => 'shopplus__stripe_histories', 'amount_column' => 'amount')
       );
       foreach ($modes as $key => $values) {
+        // sample
+        $creditsPurchasesByMonthByModes[$key] = array(
+          intval(date('m', strtotime('-6 month'))) => 0,
+          intval(date('m', strtotime('-5 month'))) => 0,
+          intval(date('m', strtotime('-4 month'))) => 0,
+          intval(date('m', strtotime('-3 month'))) => 0,
+          intval(date('m', strtotime('-2 month'))) => 0,
+          intval(date('m', strtotime('-1 month'))) => 0,
+          intval(date('m')) => 0
+        );
+        // query
         $query = $db->fetchAll(
           "SELECT SUM(`{$values['amount_column']}`) AS `amount`, MONTH(`created`) AS `month`"
           . " FROM `{$values['table']}`"
@@ -176,16 +187,6 @@ class ShopStatsController extends ShopPlusAppController {
           . " GROUP BY MONTH(`created`)"
         );
         foreach ($query as $row) {
-          // sample
-          $creditsPurchasesByMonthByModes[$key] = array(
-            intval(date('m', strtotime('-6 month'))) => 0,
-            intval(date('m', strtotime('-5 month'))) => 0,
-            intval(date('m', strtotime('-4 month'))) => 0,
-            intval(date('m', strtotime('-3 month'))) => 0,
-            intval(date('m', strtotime('-2 month'))) => 0,
-            intval(date('m', strtotime('-1 month'))) => 0,
-            intval(date('m')) => 0
-          );
           // edit
           $creditsPurchasesByMonthByModes[$key][$row[0]['month']] = $row[0]['amount'];
         }
