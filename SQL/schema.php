@@ -31,6 +31,7 @@ class ShopPlusAppSchema extends CakeSchema {
     'amount' => array('type' => 'float', 'null' => false, 'default' => null, 'unsigned' => false),
     'credits' => array('type' => 'float', 'null' => false, 'default' => null, 'unsigned' => false),
     'stripe_token' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 100, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
+    'charge_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 100, 'collate' => 'latin1_swedish_ci', 'charset' => 'latin1'),
     'created' => array('type' => 'datetime', 'null' => false, 'default' => null),
     'indexes' => array(
       'PRIMARY' => array('column' => 'id', 'unique' => 1)

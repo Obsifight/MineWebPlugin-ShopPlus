@@ -259,13 +259,13 @@ class ShopStatsController extends ShopPlusAppController {
           'Item.servers', 'MONTH(`ItemsBuyHistory`.`created`) AS `month`'
         ),
         'recursive' => 1,
-        'conditions' => "ItemsBuyHistory.created > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y/%m/31' )"
+        'conditions' => "ItemsBuyHistory.created > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y-%m-01 00:00:00' )"
       ));
       // format data
       $formattedDatas = array();
       foreach ($query as $data) {
         $formattedDatas[] = array(
-          'server' => json_decode($data['Item']['servers'], true)[0], // based on first server configured
+          'server' => unserialize($data['Item']['servers'])[0], // based on first server configured
           'month' => $data[0]['month']
         );
       }
@@ -293,7 +293,7 @@ class ShopStatsController extends ShopPlusAppController {
       $query = $this->ItemsBuyHistory->find('all', array( // get total by day
         'fields' => 'COUNT(id)',
         'group' => 'MONTH(`ItemsBuyHistory`.`created`), YEAR(`ItemsBuyHistory`.`created`)',
-        'conditions' => "ItemsBuyHistory.created < DATE_FORMAT( CURRENT_DATE, '%Y/%m/31' )" // not this month
+        'conditions' => "ItemsBuyHistory.created < DATE_FORMAT( CURRENT_DATE, '%Y-%m-01 00:00:00' )" // not this month
       ));
       $datas = array();
       foreach ($query as $data) { // group into array values
@@ -365,14 +365,14 @@ class ShopStatsController extends ShopPlusAppController {
           'Item.name', 'Item.servers', 'MONTH(`ItemsBuyHistory`.`created`) AS `month`'
         ),
         'recursive' => 1,
-        'conditions' => "ItemsBuyHistory.created > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH), '%Y/%m/31' )"
+        'conditions' => "ItemsBuyHistory.created > DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH), '%Y-%m-01 00:00:00' )"
       ));
       // format data
       $formattedDatas = array();
       foreach ($query as $datas) {
         $formattedDatas[] = array(
           'name' => $datas['Item']['name'],
-          'server' => json_decode($datas['Item']['servers'], true)[0],
+          'server' => unserialize($datas['Item']['servers'])[0],
           'month' => $datas[0]['month']
         );
       }
@@ -398,7 +398,7 @@ class ShopStatsController extends ShopPlusAppController {
       foreach ($itemsPurchasesByItemByMonthByServers as $server => $months) {
         foreach ($months as $month => $items) {
           if (isset($datasByServersByMonths[$server][$month]))
-            $itemsPurchasesByItemByMonthByServers[$server][$month] = array_merge($itemsPurchasesByItemByMonthByServers[$server][$month], $datasByServersByMonths[$server][$month]);
+            $itemsPurchasesByItemByMonthByServers[$server][$month][key($datasByServersByMonths[$server][$month])] = $datasByServersByMonths[$server][$month][key($datasByServersByMonths[$server][$month])];
         }
       }
       unset($history);

@@ -42,6 +42,7 @@
           <th><?= $Lang->get('SHOPPLUS__STRIPE_HISTORIES_AMOUNT') ?></th>
           <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
           <th><?= $Lang->get('SHOPPLUS__STRIPE_HISTORIES_TOKEN') ?></th>
+          <th><?= $Lang->get('SHOPPLUS__STRIPE_HISTORIES_CHARGE_ID') ?></th>
           <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
         </tr>
       </thead>
@@ -67,6 +68,7 @@
             {mData:"StripeHistory.amount"},
             {mData:"StripeHistory.credits"},
             {mData:"StripeHistory.stripe_token"},
+            {mData:"StripeHistory.charge_id"},
             {mData:"StripeHistory.created"}
         ],
       });

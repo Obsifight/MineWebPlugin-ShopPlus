@@ -59,7 +59,8 @@ class StripeController extends ShopPlusAppController {
         'user_id' => $this->User->getKey('id'),
         'amount' => $amount,
         'credits' => $credits,
-        'stripe_token' => $token
+        'stripe_token' => $token,
+        'charge_id' => $charge->id
       ));
       $this->StripeHistory->save();
 
@@ -112,12 +113,16 @@ class StripeController extends ShopPlusAppController {
     $this->modelClass = 'StripeHistory';
     $this->DataTable->initialize($this);
     $this->paginate = array(
-      'fields' => array($this->modelClass.'.id',$this->modelClass.'.amount','User.pseudo',$this->modelClass.'.credits',$this->modelClass.'.stripe_token',$this->modelClass.'.created'),
+      'fields' => array($this->modelClass.'.id',$this->modelClass.'.amount','User.pseudo',$this->modelClass.'.credits',$this->modelClass.'.stripe_token',$this->modelClass.'.charge_id',$this->modelClass.'.created'),
       'recursive' => 1
     );
     $this->DataTable->mDataProp = true;
 
     $response = $this->DataTable->getResponse();
+
+    foreach ($response['aaData'] as $key => $value) {
+      $response['aaData'][$key]['StripeHistory']['charge_id'] = '<a href="https://dashboard.stripe.com/payments/' . $value['StripeHistory']['charge_id'] . '" target="_blank">' . $value['StripeHistory']['charge_id'] . '</a>';
+    }
 
     $this->response->body(json_encode($response));
   }
