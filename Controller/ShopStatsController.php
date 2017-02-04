@@ -399,7 +399,7 @@ class ShopStatsController extends ShopPlusAppController {
       foreach ($itemsPurchasesByItemByMonthByServers as $server => $months) {
         foreach ($months as $month => $items) {
           if (isset($datasByServersByMonths[$server][$month]))
-            $itemsPurchasesByItemByMonthByServers[$server][$month][key($datasByServersByMonths[$server][$month])] = $datasByServersByMonths[$server][$month][key($datasByServersByMonths[$server][$month])];
+            $itemsPurchasesByItemByMonthByServers[$server][$month] = array_merge($itemsPurchasesByItemByMonthByServers[$server][$month], $datasByServersByMonths[$server][$month]);
         }
       }
       unset($history);
