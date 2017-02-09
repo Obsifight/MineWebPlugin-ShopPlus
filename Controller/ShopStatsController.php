@@ -21,7 +21,8 @@ class ShopStatsController extends ShopPlusAppController {
 
     $this->set('typesName', array(
       'PAYSAFECARD' => 'Paysafecard',
-      'STRIPE' => 'Carte de crédit',
+      'STRIPE' => 'Carte de crédit (Stripe)',
+      'PAYMILL' => 'Carte de crédit (Paymill)',
       'DEDIPASS' => 'Dédipass',
       'PAYPAL' => 'PayPal'
     ));
@@ -64,6 +65,8 @@ class ShopStatsController extends ShopPlusAppController {
         . " SELECT SUM(`amount`) AS `total`, `created` FROM `paysafecard__payment_histories` WHERE `paysafecard__payment_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/31' ) GROUP BY DAY(`paysafecard__payment_histories`.`created`), MONTH(`paysafecard__payment_histories`.`created`), YEAR(`paysafecard__payment_histories`.`created`)"
         . " UNION"
         . " SELECT SUM(`amount`) AS `total`, `created` FROM `shopplus__stripe_histories` WHERE `shopplus__stripe_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/31' ) GROUP BY DAY(`shopplus__stripe_histories`.`created`), MONTH(`shopplus__stripe_histories`.`created`), YEAR(`shopplus__stripe_histories`.`created`)"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total`, `created` FROM `shopplus__paymill_histories` WHERE `shopplus__paymill_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/31' ) GROUP BY DAY(`shopplus__paymill_histories`.`created`), MONTH(`shopplus__paymill_histories`.`created`), YEAR(`shopplus__paymill_histories`.`created`)"
         . ") t"
         . " GROUP BY DAY(`created`), MONTH(`created`), YEAR(`created`)"
       );
@@ -88,6 +91,8 @@ class ShopStatsController extends ShopPlusAppController {
         . " SELECT SUM(`amount`) AS `total` FROM `paysafecard__payment_histories` WHERE YEAR(`paysafecard__payment_histories`.`created`) = YEAR(NOW()) AND WEEK(`paysafecard__payment_histories`.`created`) = WEEK(NOW())"
         . " UNION"
         . " SELECT SUM(`amount`) AS `total` FROM `shopplus__stripe_histories` WHERE YEAR(`shopplus__stripe_histories`.`created`) = YEAR(NOW()) AND WEEK(`shopplus__stripe_histories`.`created`) = WEEK(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `shopplus__paymill_histories` WHERE YEAR(`shopplus__paymill_histories`.`created`) = YEAR(NOW()) AND WEEK(`shopplus__paymill_histories`.`created`) = WEEK(NOW())"
         . ") t"
       );
       $incomesThisWeekPercentage = ($query[0][0]['total'] - $dailyIncomesAverage) / $dailyIncomesAverage * 100;
@@ -108,6 +113,8 @@ class ShopStatsController extends ShopPlusAppController {
         . " SELECT SUM(`amount`) AS `total`, `created` FROM `paysafecard__payment_histories` WHERE `paysafecard__payment_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/31' ) GROUP BY MONTH(`paysafecard__payment_histories`.`created`), YEAR(`paysafecard__payment_histories`.`created`)"
         . " UNION"
         . " SELECT SUM(`amount`) AS `total`, `created` FROM `shopplus__stripe_histories` WHERE `shopplus__stripe_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/31' ) GROUP BY MONTH(`shopplus__stripe_histories`.`created`), YEAR(`shopplus__stripe_histories`.`created`)"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total`, `created` FROM `shopplus__paymill_histories` WHERE `shopplus__paymill_histories`.`created` < DATE_FORMAT( CURRENT_DATE, '%Y/%m/31' ) GROUP BY MONTH(`shopplus__paymill_histories`.`created`), YEAR(`shopplus__paymill_histories`.`created`)"
         . ") t"
         . " GROUP BY MONTH(`created`), YEAR(`created`)"
       );
@@ -133,6 +140,8 @@ class ShopStatsController extends ShopPlusAppController {
         . " SELECT SUM(`amount`) AS `total` FROM `paysafecard__payment_histories` WHERE YEAR(`paysafecard__payment_histories`.`created`) = YEAR(NOW()) AND MONTH(`paysafecard__payment_histories`.`created`) = MONTH(NOW())"
         . " UNION"
         . " SELECT SUM(`amount`) AS `total` FROM `shopplus__stripe_histories` WHERE YEAR(`shopplus__stripe_histories`.`created`) = YEAR(NOW()) AND MONTH(`shopplus__stripe_histories`.`created`) = MONTH(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `shopplus__paymill_histories` WHERE YEAR(`shopplus__paymill_histories`.`created`) = YEAR(NOW()) AND MONTH(`shopplus__paymill_histories`.`created`) = MONTH(NOW())"
         . ") t"
       );
       $incomesThisMonth = $query[0][0]['total'];
@@ -155,6 +164,8 @@ class ShopStatsController extends ShopPlusAppController {
         . " SELECT SUM(`amount`) AS `total` FROM `paysafecard__payment_histories` WHERE YEAR(`paysafecard__payment_histories`.`created`) = YEAR(NOW()) AND MONTH(`paysafecard__payment_histories`.`created`) = MONTH(NOW()) AND DAY(`paysafecard__payment_histories`.`created`) = DAY(NOW())"
         . " UNION"
         . " SELECT SUM(`amount`) AS `total` FROM `shopplus__stripe_histories` WHERE YEAR(`shopplus__stripe_histories`.`created`) = YEAR(NOW()) AND MONTH(`shopplus__stripe_histories`.`created`) = MONTH(NOW()) AND DAY(`shopplus__stripe_histories`.`created`) = DAY(NOW())"
+        . " UNION"
+        . " SELECT SUM(`amount`) AS `total` FROM `shopplus__paymill_histories` WHERE YEAR(`shopplus__paymill_histories`.`created`) = YEAR(NOW()) AND MONTH(`shopplus__paymill_histories`.`created`) = MONTH(NOW()) AND DAY(`shopplus__paymill_histories`.`created`) = DAY(NOW())"
         . ") t"
       );
       $incomesToday = $query[0][0]['total'];
@@ -166,7 +177,8 @@ class ShopStatsController extends ShopPlusAppController {
         'PAYSAFECARD' => array('table' => 'paysafecard__payment_histories', 'amount_column' => 'amount'),
         'PAYPAL' => array('table' => 'shop__paypal_histories', 'amount_column' => 'payment_amount'),
         'DEDIPASS' => array('table' => 'shop__dedipass_histories', 'amount_column' => 'shopplus-payout'),
-        'STRIPE' => array('table' => 'shopplus__stripe_histories', 'amount_column' => 'amount')
+        'STRIPE' => array('table' => 'shopplus__stripe_histories', 'amount_column' => 'amount'),
+        'PAYMILL' => array('table' => 'shopplus__paymill_histories', 'amount_column' => 'amount')
       );
       foreach ($modes as $key => $values) {
         // sample
@@ -200,6 +212,7 @@ class ShopStatsController extends ShopPlusAppController {
       $creditsPurchasesByModes = array(
         'PAYSAFECARD' => array(),
         'STRIPE' => array(),
+        'PAYMILL' => array(),
         'PAYPAL' => array(),
         'DEDIPASS' => array()
       ); // amount of purchases by mode (PayPal/Dédipass...) (on any servers)
@@ -220,7 +233,7 @@ class ShopStatsController extends ShopPlusAppController {
     // *********
     // Purchases
     // *********
-    /* --- itemsPurchasesThisMonth --- */ // TODO
+    /* --- itemsPurchasesThisMonth --- */
       $itemsPurchasesThisMonth = 0; // count items
       $itemsPurchasesThisMonth = $this->ItemsBuyHistory->find('count', array(
         'conditions' => 'MONTH(ItemsBuyHistory.created) = MONTH(NOW()) AND YEAR(ItemsBuyHistory.created) = YEAR(NOW())'
@@ -326,7 +339,7 @@ class ShopStatsController extends ShopPlusAppController {
       }
       unset($datas);
       $this->set(compact('itemsPurchasesByServers'));
-    /* --- itemsPurchases --- */ // TODO
+    /* --- itemsPurchases --- */
       $itemsPurchases = array(); // amount of purchases by items (on any servers)
       $query = $this->ItemsBuyHistory->find('all', array(
         'recursive' => 1,
