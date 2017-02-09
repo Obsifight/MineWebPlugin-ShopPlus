@@ -22,9 +22,15 @@ class ShopplusModuleEventListener implements CakeEventListener {
       $stripeConfig = $this->controller->StripeConfiguration->find('first');
       ModuleComponent::$vars['stripeConfig'] = $stripeConfig;
 
+      $this->controller->loadModel('ShopPlus.PaymillConfiguration');
+      $paymill = $this->controller->PaymillConfiguration->find('first');
+      ModuleComponent::$vars['paymillConfig'] = $paymill;
+
       ModuleComponent::$vars['permissions'] = array(
         'SHOPPLUS__ADMIN_CONFIG_STRIPE' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_CONFIG_STRIPE'),
-        'SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY')
+        'SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY'),
+        'SHOPPLUS__ADMIN_CONFIG_PAYMILL' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_CONFIG_PAYMILL'),
+        'SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY')
       );
 
     }

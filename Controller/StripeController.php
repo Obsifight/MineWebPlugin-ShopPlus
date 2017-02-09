@@ -91,11 +91,14 @@ class StripeController extends ShopPlusAppController {
 
     // Save
     $this->loadModel('ShopPlus.StripeConfiguration');
-    $this->StripeConfiguration->read(null, 1);
+    $findConfig = $this->StripeConfiguration->find('first');
+    $id = (!empty($findConfig)) ? $findConfig['StripeConfiguration']['id'] : null;
+    $this->StripeConfiguration->read(null, $id);
     $this->StripeConfiguration->set(array(
       'secret_key' => $this->request->data['secret_key'],
       'publishable_key' => $this->request->data['publishable_key'],
-      'credits_for_1' => $this->request->data['credits_for_1']
+      'credits_for_1' => $this->request->data['credits_for_1'],
+      'status' => $this->request->data['status']
     ));
     $this->StripeConfiguration->save();
 

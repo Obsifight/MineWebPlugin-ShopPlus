@@ -43,6 +43,16 @@ class PaymentPageController extends ShopPlusAppController {
       $this->set('stripe', false);
     }
 
+    $this->loadModel('ShopPlus.PaymillConfiguration');
+    $paymillConfig = $this->PaymillConfiguration->find('first');
+    if (!empty($paymillConfig) && $paymillConfig['PaymillConfiguration']['status']) {
+      $this->set('paymill', true);
+      $this->set('paymillCreditFor1', $paymillConfig['PaymillConfiguration']['credits_for_1']);
+      $this->set('paymillPublicKey', $paymillConfig['PaymillConfiguration']['public_key']);
+    } else {
+      $this->set('paymill', false);
+    }
+
     $this->set(compact(
       'paypalOffers',
       'starpassOffers',

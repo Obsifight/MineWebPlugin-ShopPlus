@@ -22,6 +22,13 @@
         <input type="text" class="form-control" name="credits_for_1" placeholder="Ex: 80"<?= (isset($stripeConfig['StripeConfiguration']['credits_for_1'])) ? ' value="'.$stripeConfig['StripeConfiguration']['credits_for_1'].'"' : '' ?>>
       </div>
 
+      <div class="checkbox">
+        <input name="status" type="checkbox"<?= (isset($stripeConfig['StripeConfiguration']['status']) && $stripeConfig['StripeConfiguration']['status']) ? ' checked' : '' ?>>
+         <label>
+           <?= $Lang->get('SHOPPLUS__STRIPE_ADMIN_CONFIG_ENABLE') ?>
+         </label>
+       </div>
+
       <div class="form-group">
         <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
       </div>
@@ -70,6 +77,95 @@
             {mData:"StripeHistory.stripe_token"},
             {mData:"StripeHistory.charge_id"},
             {mData:"StripeHistory.created"}
+        ],
+      });
+    });
+    </script>
+    <hr>
+  <?php endif; ?>
+
+</div>
+<div class="tab-pane" id="tab_paymill">
+
+  <h3><?= $Lang->get('SHOPPLUS__PAYMILL_ADMIN') ?></h3>
+
+  <br><br>
+
+  <?php if($permissions['SHOPPLUS__ADMIN_CONFIG_PAYMILL']): ?>
+    <form action="<?= $this->Html->url(array('controller' => 'paymill', 'action' => 'config', 'plugin' => 'ShopPlus', 'admin' => true)) ?>" data-ajax="true">
+
+      <div class="form-group">
+        <label><?= $Lang->get('SHOPPLUS__PAYMILL_ADMIN_CONFIG_SECRET_KEY') ?></label>
+        <input type="text" class="form-control" name="secret_key" placeholder="Ex: 631efc87935fd6dde004868fb0585663"<?= (isset($paymillConfig['PaymillConfiguration']['secret_key'])) ? ' value="'.$paymillConfig['PaymillConfiguration']['secret_key'].'"' : '' ?>>
+      </div>
+
+      <div class="form-group">
+        <label><?= $Lang->get('SHOPPLUS__PAYMILL_ADMIN_CONFIG_PUBLIC_KEY') ?></label>
+        <input type="text" class="form-control" name="public_key" placeholder="Ex: 199292295933c61e323bdb95c636ddae"<?= (isset($paymillConfig['PaymillConfiguration']['public_key'])) ? ' value="'.$paymillConfig['PaymillConfiguration']['public_key'].'"' : '' ?>>
+      </div>
+
+      <div class="form-group">
+        <label><?= $Lang->get('SHOPPLUS__PAYMILL_ADMIN_CONFIG_DEFAULT_CREDITS_GIVED_FOR_1_AS_AMOUNT', array('{MONEY_NAME}' => ucfirst($Configuration->getMoneyName()))) ?></label>
+        <input type="text" class="form-control" name="credits_for_1" placeholder="Ex: 80"<?= (isset($paymillConfig['PaymillConfiguration']['credits_for_1'])) ? ' value="'.$paymillConfig['PaymillConfiguration']['credits_for_1'].'"' : '' ?>>
+      </div>
+
+      <div class="checkbox">
+        <input name="status" type="checkbox"<?= (isset($paymillConfig['PaymillConfiguration']['status']) && $paymillConfig['PaymillConfiguration']['status']) ? ' checked' : '' ?>>
+         <label>
+           <?= $Lang->get('SHOPPLUS__PAYMILL_ADMIN_CONFIG_ENABLE') ?>
+         </label>
+       </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary"><?= $Lang->get('GLOBAL__SUBMIT') ?></button>
+      </div>
+
+    </form>
+  <?php endif; ?>
+
+  <?php if($permissions['SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY']): ?>
+    <hr>
+
+    <h3><?= $Lang->get('SHOPPLUS__PAYMILL_HISTORIES') ?></h3>
+
+    <table class="table table-bordered dataTable" id="histories_paymill">
+      <thead>
+        <tr>
+          <th><?= $Lang->get('SHOPPLUS__PAYMILL_HISTORIES_ID') ?></th>
+          <th><?= $Lang->get('USER__USERNAME') ?></th>
+          <th><?= $Lang->get('SHOPPLUS__PAYMILL_HISTORIES_AMOUNT') ?></th>
+          <th><?= ucfirst($Configuration->getMoneyName()) ?></th>
+          <th><?= $Lang->get('SHOPPLUS__PAYMILL_HISTORIES_TOKEN') ?></th>
+          <th><?= $Lang->get('SHOPPLUS__PAYMILL_HISTORIES_PAYMENT_ID') ?></th>
+          <th><?= $Lang->get('SHOPPLUS__PAYMILL_HISTORIES_TRANSACTION_ID') ?></th>
+          <th><?= $Lang->get('GLOBAL__CREATED') ?></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <script type="text/javascript">
+    $(document).ready(function() {
+      $('#histories_paymill').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": false,
+        "info": false,
+        "autoWidth": false,
+        'searching': true,
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "<?= $this->Html->url(array('controller' => 'paymill', 'action' => 'get_histories', 'plugin' => 'ShopPlus', 'admin' => true)) ?>",
+        "aoColumns": [
+            {mData:"PaymillHistory.id"},
+            {mData:"User.pseudo"},
+            {mData:"PaymillHistory.amount"},
+            {mData:"PaymillHistory.credits"},
+            {mData:"PaymillHistory.paymill_token"},
+            {mData:"PaymillHistory.payment_id"},
+            {mData:"PaymillHistory.transaction_id"},
+            {mData:"PaymillHistory.created"}
         ],
       });
     });
