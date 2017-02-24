@@ -30,6 +30,13 @@
   "SHOPPLUS__HIPAY_WALLET_TERMS_SUBTITLE": "En continuant, je reconnais que :",
   "SHOPPLUS__HIPAY_WALLET_TERMS_INFO": "Note aux mineurs : En continuant et en ne respectant les les conditions ci-dessus, si vous veniez par exemple à essayer d'annuler votre paiement, vos responsables légaux devraient alors assumer la responsabilité de vos actes",
 
+  "SHOPPLUS__HIPAY_WALLET_SUCCESS_TITLE": "Succès de la transaction",
+  "SHOPPLUS__HIPAY_WALLET_SUCCESS_MESSAGE": "La transaction a bien été enregistré par les serveurs de HipayWallet, vous serez créditer dans quelques minutes automatiquement. Merci et bon jeu sur notre infrastructure !",
+  "SHOPPLUS__HIPAY_WALLET_CANCEL_TITLE": "Échec de la transaction",
+  "SHOPPLUS__HIPAY_WALLET_CANCEL_MESSAGE": "Vous avez annulé la transaction en cours, vous ne serez donc pas créditer. Merci quand même et bon jeu à vous !",
+  "SHOPPLUS__HIPAY_WALLET_ERROR_TITLE": "Échec de la transaction",
+  "SHOPPLUS__HIPAY_WALLET_ERROR_MESSAGE": "Une erreur s'est produite durant le processus de la transaction. Veuillez rééssayer plus tard et contacter un administrateur si le problème persiste.",
+
   "SHOPPLUS__STRIPE_INFO_BEFORE_BUY": "Vous allez payer {AMOUNT}€ sur notre site par l'intermédiaire de Stripe avec votre carte bancaire. Une fois le paiement effectué, vous serez automatiquement crédité de {CREDITS} {MONEY_NAME}.",
   "SHOPPLUS__STRIPE_INFO_SECURITY_BEFORE_BUY": "Vous êtes sur une page sécurisée.",
   "SHOPPLUS__STRIPE_INFO_BEFORE_BUY_STORE": " Vos informations bancaires ne sont pas enregistrées, les transactions sont gérés par Stripe.",
