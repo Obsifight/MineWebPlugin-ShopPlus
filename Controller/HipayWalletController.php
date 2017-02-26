@@ -29,15 +29,15 @@ class HipayWalletController extends ShopPlusAppController {
 
     // find offer
     $this->loadModel('ShopPlus.HipayWalletOffer');
-    $offer = $this->HipayWalletOffer->find('first', array('conditions' => array('amount' => floatval($info->result[0]->origAmount), 'id' => (int)$info->result[0]->merchantDatas->_aKey_offer_id)));
+    $offer = $this->HipayWalletOffer->find('first', array('conditions' => array('amount' => floatval($info->result[0]->origAmount), 'id' => (int)$info->result[0]->merchantDatas->_aKey_offer)));
     if (empty($offer))
       throw new NotFoundException('Offer not found with this amount');
     $offer = $offer['HipayWalletOffer'];
 
     // find user
-    if (!$this->User->exist((int)$info->result[0]->merchantDatas->_aKey_user_id))
+    if (!$this->User->exist($info->result[0]->merchantDatas->_aKey_user))
       throw new NotFoundException('User not found');
-    $userId = (int)$info->result[0]->merchantDatas->_aKey_user_id;
+    $userId = $info->result[0]->merchantDatas->_aKey_user;
     // check payment in history
     $this->loadModel('ShopPlus.HipayWalletHistory');
     if ($this->HipayWalletHistory->find('count', array('conditions' => array('transaction_id' => $info->result[0]->transid))) > 0)
@@ -61,9 +61,6 @@ class HipayWalletController extends ShopPlusAppController {
       'transaction_id' => $info->result[0]->transid
     ));
     $this->HipayWalletHistory->save();
-
-    $this->HistoryC = $this->Components->load('History');
-    $this->HistoryC->set('BUY_MONEY', 'shop', $userId);
 
     // send 200
     $this->response->statusCode(200);
