@@ -26,11 +26,21 @@ class ShopplusModuleEventListener implements CakeEventListener {
       $paymill = $this->controller->PaymillConfiguration->find('first');
       ModuleComponent::$vars['paymillConfig'] = $paymill;
 
+      $this->controller->loadModel('ShopPlus.HipayWalletConfiguration');
+      $hipayWallet = $this->controller->HipayWalletConfiguration->find('first');
+      ModuleComponent::$vars['hipayWalletConfig'] = $hipayWallet;
+
+      $this->controller->loadModel('ShopPlus.HipayWalletOffer');
+      $hipayWalletOffers = $this->controller->HipayWalletOffer->find('all', array('order' => 'amount ASC'));
+      ModuleComponent::$vars['hipayWalletOffers'] = $hipayWalletOffers;
+
       ModuleComponent::$vars['permissions'] = array(
         'SHOPPLUS__ADMIN_CONFIG_STRIPE' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_CONFIG_STRIPE'),
         'SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY'),
         'SHOPPLUS__ADMIN_CONFIG_PAYMILL' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_CONFIG_PAYMILL'),
-        'SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY')
+        'SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY'),
+        'SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET'),
+        'SHOPPLUS__ADMIN_VIEW_HIPAY_WALLET_HISTORY' => $this->controller->Permissions->can('SHOPPLUS__ADMIN_VIEW_HIPAY_WALLET_HISTORY')
       );
 
     }

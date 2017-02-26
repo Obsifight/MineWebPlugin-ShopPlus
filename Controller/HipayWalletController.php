@@ -81,4 +81,105 @@ class HipayWalletController extends ShopPlusAppController {
     $this->set('title_for_layout', $this->Lang->get('SHOPPLUS__HIPAY_WALLET_ERROR_TITLE'));
   }
 
+  public function admin_config() {
+    $this->autoRender = false;
+    $this->response->type('json');
+
+    if(!$this->isConnected || !$this->Permissions->can('SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET'))
+      throw new ForbiddenException();
+    if(!$this->request->is('ajax'))
+      throw new NotFoundException();
+
+    if(empty($this->request->data['user_account_id']) || empty($this->request->data['website_id']) || empty($this->request->data['private_key']))
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+
+    // Save
+    $this->loadModel('ShopPlus.HipayWalletConfiguration');
+    $findConfig = $this->HipayWalletConfiguration->find('first');
+    $id = (!empty($findConfig)) ? $findConfig['HipayWalletConfiguration']['id'] : null;
+    $this->HipayWalletConfiguration->read(null, $id);
+    $this->HipayWalletConfiguration->set(array(
+      'user_account_id' => intval($this->request->data['user_account_id']),
+      'website_id' => intval($this->request->data['website_id']),
+      'private_key' => $this->request->data['private_key'],
+      'test' => $this->request->data['test'],
+      'status' => $this->request->data['status']
+    ));
+    $this->HipayWalletConfiguration->save();
+
+    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOPPLUS__HIPAY_WALLET_ADMIN_CONFIG_SAVED'))));
+  }
+
+  public function admin_get_histories() {
+    if(!$this->isConnected || !$this->Permissions->can('SHOPPLUS__ADMIN_VIEW_HIPAY_WALLET_HISTORY'))
+      throw new ForbiddenException();
+
+    $this->autoRender = false;
+    $this->response->type('json');
+
+    $this->DataTable = $this->Components->load('DataTable');
+    $this->modelClass = 'HipayWalletHistory';
+    $this->DataTable->initialize($this);
+    $this->paginate = array(
+      'fields' => array(
+        $this->modelClass.'.id',
+        $this->modelClass.'.amount',
+        'User.pseudo',
+        $this->modelClass.'.credits',
+        $this->modelClass.'.transaction_id',
+        $this->modelClass.'.created'
+      ),
+      'recursive' => 1
+    );
+    $this->DataTable->mDataProp = true;
+
+    $response = $this->DataTable->getResponse();
+
+    /*foreach ($response['aaData'] as $key => $value) {
+      $response['aaData'][$key]['StripeHistory']['charge_id'] = '<a href="https://dashboard.stripe.com/payments/' . $value['StripeHistory']['charge_id'] . '" target="_blank">' . $value['StripeHistory']['charge_id'] . '</a>';
+    }*/
+
+    $this->response->body(json_encode($response));
+  }
+
+  public function admin_offer_add() {
+    $this->autoRender = false;
+    $this->response->type('json');
+
+    if(!$this->isConnected || !$this->Permissions->can('PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET_OFFERS'))
+      throw new ForbiddenException();
+    if(!$this->request->is('ajax'))
+      throw new NotFoundException();
+
+    if(empty($this->request->data['amount']) || empty($this->request->data['credits']))
+      return $this->response->body(json_encode(array('statut' => false, 'msg' => $this->Lang->get('ERROR__FILL_ALL_FIELDS'))));
+
+    // Save
+    $this->loadModel('ShopPlus.HipayWalletOffer');
+    $this->HipayWalletOffer->create();
+    $this->HipayWalletOffer->set(array(
+      'amount' => floatval($this->request->data['amount']),
+      'credits' => floatval($this->request->data['credits'])
+    ));
+    $this->HipayWalletOffer->save();
+
+    $this->response->body(json_encode(array('statut' => true, 'msg' => $this->Lang->get('SHOPPLUS__HIPAY_WALLET_ADMIN_ADD_OFFER_SUCCESS'), 'data' => array('id' => $this->HipayWalletOffer->getLastInsertId(), 'created' => date('Y-m-d H:i:s')))));
+  }
+
+  public function admin_offer_delete() {
+    $this->autoRender = false;
+
+    if(!$this->isConnected || !$this->Permissions->can('PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET_OFFERS'))
+      throw new ForbiddenException();
+    if (!isset($this->request->params) || !isset($this->request->params['id']))
+      throw new BadRequestException();
+
+    // delete offer
+    $this->loadModel('ShopPlus.HipayWalletOffer');
+    $this->HipayWalletOffer->delete($this->request->params['id']);
+
+    $this->Session->setFlash($this->Lang->get('SHOPPLUS__HIPAY_WALLET_ADMIN_DELETE_OFFER_SUCCESS'), 'default.success');
+    $this->redirect(array('controller' => 'payment', 'action' => 'index', 'plugin' => 'shop', 'admin' => true));
+  }
+
 }

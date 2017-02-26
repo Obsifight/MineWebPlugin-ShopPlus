@@ -15,5 +15,7 @@ Router::connect('/shop/credits/hipay-wallet/payment/error', array('controller' =
 Router::connect('/shop/credits/hipay-wallet/payment/cancel', array('controller' => 'HipayWallet', 'action' => 'cancel', 'plugin' => 'ShopPlus'));
 Router::connect('/admin/shop/credits/hipay-wallet/config', array('controller' => 'HipayWallet', 'action' => 'config', 'plugin' => 'ShopPlus', 'admin' => true));
 Router::connect('/admin/shop/credits/hipay-wallet/history', array('controller' => 'HipayWallet', 'action' => 'get_histories', 'plugin' => 'ShopPlus', 'admin' => true));
+Router::connect('/admin/shop/credits/hipay-wallet/offers/delete/:id', array('controller' => 'HipayWallet', 'action' => 'offer_delete', 'plugin' => 'ShopPlus', 'admin' => true));
+Router::connect('/admin/shop/credits/hipay-wallet/offers/add', array('controller' => 'HipayWallet', 'action' => 'offer_add', 'plugin' => 'ShopPlus', 'admin' => true));
 
 Router::connect('/admin/shop/stats', array('controller' => 'ShopStats', 'action' => 'index', 'plugin' => 'ShopPlus', 'admin' => true));

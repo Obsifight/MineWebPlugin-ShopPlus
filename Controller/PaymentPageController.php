@@ -126,7 +126,7 @@ class PaymentPageController extends ShopPlusAppController {
       $this->set('hipayWalletTestMode', $hipayWalletConfig['HipayWalletConfiguration']['test']);
       // offers
       $this->loadModel('ShopPlus.HipayWalletOffer');
-      $hipayWalletOffers = $this->HipayWalletOffer->find('all', array('order' => 'amount DESC'));
+      $hipayWalletOffers = $this->HipayWalletOffer->find('all', array('order' => 'amount ASC'));
       $this->set('hipayWalletOffers', array_map(function ($offer) use ($hipayWalletConfig) {
         list($encodedData, $md5Sign) = $this->__generateHipayWalletForm(array(
           'user_account_id' => $hipayWalletConfig['HipayWalletConfiguration']['user_account_id'],

@@ -37,6 +37,22 @@
   "SHOPPLUS__HIPAY_WALLET_ERROR_TITLE": "Échec de la transaction",
   "SHOPPLUS__HIPAY_WALLET_ERROR_MESSAGE": "Une erreur s'est produite durant le processus de la transaction. Veuillez rééssayer plus tard et contacter un administrateur si le problème persiste.",
 
+  "SHOPPLUS__HIPAY_WALLET_ADMIN": "HipayWallet",
+  "SHOPPLUS__HIPAY_WALLET_ADMIN_CONFIG_USER_ACCOUNT_ID": "ID du compte",
+  "SHOPPLUS__HIPAY_WALLET_ADMIN_CONFIG_WEBSITE_ID": "ID du site",
+  "SHOPPLUS__HIPAY_WALLET_ADMIN_CONFIG_PRIVATE_KEY": "Clé privée (pour crypter)",
+  "SHOPPLUS__HIPAY_WALLET_ADMIN_CONFIG_TEST_MODE": "Mode de test",
+  "SHOPPLUS__HIPAY_WALLET_ADMIN_CONFIG_ENABLE": "Activé",
+  "SHOPPLUS__HIPAY_WALLET_HISTORIES": "Historique des transactions HipayWallet",
+  "SHOPPLUS__HIPAY_WALLET_ADMIN_CONFIG_SAVED": "La configuration a bien été enregistrée",
+  "SHOPPLUS__HIPAY_WALLET_HISTORIES_ID": "ID",
+  "SHOPPLUS__HIPAY_WALLET_HISTORIES_AMOUNT": "Montant",
+  "SHOPPLUS__HIPAY_WALLET_HISTORIES_TRANS_ID": "ID de la transaction",
+  "SHOPPLUS__HIPAY_WALLET_OFFERS": "Offres",
+  "SHOPPLUS__HIPAY_WALLET_OFFERS_ADD": "Ajouter une offre",
+  "SHOPPLUS__HIPAY_WALLET_ADMIN_DELETE_OFFER_SUCCESS": "L'offre a bien été supprimée",
+  "SHOPPLUS__HIPAY_WALLET_ADMIN_ADD_OFFER_SUCCESS": "L'offre a bien été ajoutée",
+
   "SHOPPLUS__STRIPE_INFO_BEFORE_BUY": "Vous allez payer {AMOUNT}€ sur notre site par l'intermédiaire de Stripe avec votre carte bancaire. Une fois le paiement effectué, vous serez automatiquement crédité de {CREDITS} {MONEY_NAME}.",
   "SHOPPLUS__STRIPE_INFO_SECURITY_BEFORE_BUY": "Vous êtes sur une page sécurisée.",
   "SHOPPLUS__STRIPE_INFO_BEFORE_BUY_STORE": " Vos informations bancaires ne sont pas enregistrées, les transactions sont gérés par Stripe.",
@@ -127,5 +143,8 @@
   "PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_STRIPE": "Pouvoir configurer Stripe",
   "PERMISSIONS__SHOPPLUS__ADMIN_VIEW_STRIPE_HISTORY": "Pouvoir voir l'historique des transactions Stripe",
   "PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_PAYMILL": "Pouvoir configurer Paymill",
-  "PERMISSIONS__SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY": "Pouvoir voir l'historique des transactions Paymill"
+  "PERMISSIONS__SHOPPLUS__ADMIN_VIEW_PAYMILL_HISTORY": "Pouvoir voir l'historique des transactions Paymill",
+  "PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET": "Pouvoir configurer HipayWallet",
+  "PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET_OFFERS": "Pouvoir configurer les offres HipayWallet",
+  "PERMISSIONS__SHOPPLUS__ADMIN_VIEW_HIPAY_WALLET_HISTORY": "Pouvoir voir l'historique des transactions HipayWallet"
 }
