@@ -321,7 +321,7 @@ Object.values = function (obj) {
               <script>
                 var creditsPurchasesChartData = [
                   <?php
-                    $rgbColors = array('75,192,192', '192,75,75', '75,98,192', '192,75,169', '6, 154, 28');
+                    $rgbColors = array('75,192,192', '192,75,75', '75,98,192', '192,75,169', '6, 154, 28', '142, 68, 173');
                     $i = 0;
                     foreach ($creditsPurchasesByMonthByModes as $type => $datas) {
                       echo '{';
@@ -449,14 +449,16 @@ Object.values = function (obj) {
                           "#36A2EB",
                           "#FFCE56",
                           "#27ae60",
-                          "#4bddfe"
+                          "#4bddfe",
+                          "#8e44ad"
                         ],
                         hoverBackgroundColor: [
                           "#FF6384",
                           "#36A2EB",
                           "#FFCE56",
                           "#27ae60",
-                          "#4bddfe"
+                          "#4bddfe",
+                          "#8e44ad"
                         ]
                       }
                     ]
