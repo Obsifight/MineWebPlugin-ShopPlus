@@ -143,7 +143,7 @@ class HipayWalletController extends ShopPlusAppController {
     $this->autoRender = false;
     $this->response->type('json');
 
-    if(!$this->isConnected || !$this->Permissions->can('PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET_OFFERS'))
+    if(!$this->isConnected || !$this->Permissions->can('SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET_OFFERS'))
       throw new ForbiddenException();
     if(!$this->request->is('ajax'))
       throw new NotFoundException();
@@ -166,7 +166,7 @@ class HipayWalletController extends ShopPlusAppController {
   public function admin_offer_delete() {
     $this->autoRender = false;
 
-    if(!$this->isConnected || !$this->Permissions->can('PERMISSIONS__SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET_OFFERS'))
+    if(!$this->isConnected || !$this->Permissions->can('SHOPPLUS__ADMIN_CONFIG_HIPAY_WALLET_OFFERS'))
       throw new ForbiddenException();
     if (!isset($this->request->params) || !isset($this->request->params['id']))
       throw new BadRequestException();

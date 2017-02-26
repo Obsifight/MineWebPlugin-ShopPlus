@@ -195,7 +195,7 @@
 
       <div class="form-group">
         <label><?= $Lang->get('SHOPPLUS__HIPAY_WALLET_ADMIN_CONFIG_PRIVATE_KEY', array('{MONEY_NAME}' => ucfirst($Configuration->getMoneyName()))) ?></label>
-        <textarea class="form-control" rows="16" name="private_key"><?= (isset($hipayWalletConfig['HipayWalletConfiguration']['private_key'])) ? $hipayWalletConfig['HipayWalletConfiguration']['private_key'].'"' : '' ?></textarea>
+        <textarea class="form-control" rows="16" name="private_key"><?= (isset($hipayWalletConfig['HipayWalletConfiguration']['private_key'])) ? $hipayWalletConfig['HipayWalletConfiguration']['private_key'] : '' ?></textarea>
       </div>
 
       <div class="checkbox">
