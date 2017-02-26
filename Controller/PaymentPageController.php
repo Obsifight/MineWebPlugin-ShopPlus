@@ -137,7 +137,7 @@ class PaymentPageController extends ShopPlusAppController {
         return array('encodedData' => $encodedData, 'md5Sign' => $md5Sign, 'credits' => $offer['HipayWalletOffer']['credits'], 'amount' => $offer['HipayWalletOffer']['amount']);
       }, $hipayWalletOffers));
     } else {
-      $this->set('paymill', false);
+      $this->set('hipayWallet', false);
     }
 
     $this->set(compact(
